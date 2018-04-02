@@ -1,0 +1,46 @@
+buildscript {
+    apply from: './gradle/scripts/dependencies.build.gradle'
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "org.junit.platform:junit-platform-gradle-plugin:${versions.plugins.junit}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.plugins.kotlin}"
+    }
+}
+
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.2.31"
+}
+
+apply plugin: 'kotlin'
+apply from: './gradle/scripts/dependencies.build.gradle'
+apply from: './gradle/scripts/testing.build.gradle'
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    apply from: './gradle/scripts/dependencies.build.gradle'
+}
+
+sourceSets {
+    main {
+        kotlin.srcDirs 'src/main/kotlin'
+        resources.srcDir 'src/main/resources'
+    }
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = project.versions.jvm
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${project.versions.kotlin}"
+}

@@ -1,2 +1,2 @@
 # kdiff
-kotlin parser for github diffs
+kotlin parser for github unified diffs

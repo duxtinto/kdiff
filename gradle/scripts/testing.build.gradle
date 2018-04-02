@@ -1,0 +1,70 @@
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+sourceSets {
+    test {
+        kotlin.srcDirs += [
+                'src/test/kotlin',
+        ]
+    }
+}
+
+dependencies {
+    testCompileOnly(
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${project.versions.kotlin}",
+    )
+
+    testCompile(
+            "org.junit.platform:junit-platform-console:${project.versions.junit_platform}",
+            "org.junit.jupiter:junit-jupiter-api:${project.versions.junit}",
+            "org.junit.jupiter:junit-jupiter-params:${project.versions.junit}",
+            "org.assertj:assertj-core:${project.versions.assertj}",
+            "org.jmockit:jmockit:${project.versions.jmockit}",
+            "com.nhaarman.mockitokotlin2:mockito-kotlin:${project.versions.mockito_kotlin}",
+            "io.github.benas:random-beans:${project.versions.random_beans}",
+            "io.github.benas:random-beans-randomizers:${project.versions.random_beans}",
+            "org.jetbrains.kotlin:kotlin-test-junit:${project.versions.kotlin}",
+            "org.jetbrains.kotlin:kotlin-reflect:${project.versions.kotlin}"
+    )
+
+    testRuntime(
+            "org.junit.jupiter:junit-jupiter-engine:${project.versions.junit}",
+    )
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = project.versions.jvm
+    }
+}
+
+junitPlatformTest {
+    if (project.hasProperty('debug')) {
+        jvmArgs '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005'
+    }
+}
+
+junitPlatform {
+    selectors {
+        if (project.hasProperty('singleTestClass')) {
+            aClass project.property('singleTestClass')
+        }
+    }
+
+    filters {
+        tags {
+            if (project.hasProperty('filterTagged')) {
+                include project.property('filterTagged')
+            }
+        }
+    }
+}
+
+task enableMockitoStaticMocking {
+    mkdir("src/test/resources/mockito-extensions")
+    def mockMakerConfig = file("src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker")
+    if (!mockMakerConfig.exists()) {
+        mockMakerConfig
+                .createNewFile()
+        mockMakerConfig.text = "mock-maker-inline\n"
+    }
+}

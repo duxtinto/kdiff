@@ -1,0 +1,6 @@
+.idea
+out/
+
+## File-based project format:
+*.iws
+

@@ -1,0 +1,18 @@
+ext {
+    versions = [
+            jvm : 1.8,
+            plugins: [
+                    'junit': '1.0.3',
+                    'kotlin': '1.2.31'
+            ],
+            kotlin         : '1.2.31',
+
+            // Testing
+            junit          : '5.0.3',
+            junit_platform : '1.0.3',
+            assertj        : '3.9.0',
+            jmockit        : '1.38',
+            mockito_kotlin : '2.0.0-alpha02',
+            random_beans   : '3.7.0',
+    ]
+}
