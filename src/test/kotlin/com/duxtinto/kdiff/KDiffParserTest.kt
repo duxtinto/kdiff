@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 
 class KDiffParserTest {
     @Test
-    internal fun `parsing empty diff should return empty list`() {
+    internal fun `parse an empty diff should return empty list`() {
         // Arrange
         val sut = KDiffParser()
 
@@ -17,7 +17,7 @@ class KDiffParserTest {
     }
 
     @Test
-    internal fun parseAFileModificationHeader() {
+    internal fun `parse a diff header`() {
         // Arrange
         val sut = KDiffParser()
         val diff = """
@@ -36,7 +36,7 @@ class KDiffParserTest {
     }
 
     @Test
-    internal fun `parsing a single-line diff hunk header`() {
+    internal fun `parse a single-line diff hunk header`() {
         // Arrange
         val sut = KDiffParser()
         val diff = """
@@ -66,7 +66,7 @@ class KDiffParserTest {
     }
 
     @Test
-    internal fun `parsing a multi-line diff hunk`() {
+    internal fun `parse a multi-line diff hunk`() {
         // Arrange
         val sut = KDiffParser()
         val diff = """
