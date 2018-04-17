@@ -7,6 +7,6 @@ data class DiffHunk (
     data class Part(
             val start: Int = 0,
             val count: Int = 0,
-            val lines: MutableList<String> = mutableListOf()
+            val lines: MutableMap<Int, String> = mutableMapOf()
     )
 }

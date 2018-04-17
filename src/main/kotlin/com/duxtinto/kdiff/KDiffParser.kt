@@ -5,6 +5,7 @@ class KDiffParser {
         val parsedDiffs = mutableListOf<Diff>()
         var currentParsedDiff: Diff? = null
         var currentParsedHunk: DiffHunk? = null
+        var numLine = 1
 
         for (line in diffs.lines()) {
             when {
@@ -35,21 +36,25 @@ class KDiffParser {
                     }
 
                     currentParsedHunk = createHunkFromHeader(line)
+                    numLine = 1
                 }
 
                 currentParsedHunk != null && line.matches(DiffLine.Type.HUNK_LINE_COMMON) -> {
                     with (parseHunkline(line)!!) {
-                        currentParsedHunk.from.lines.add(this)
-                        currentParsedHunk.to.lines.add(this)
+                        currentParsedHunk.from.lines.put(numLine, this)
+                        currentParsedHunk.to.lines.put(numLine, this)
                     }
+                    numLine++
                 }
 
                 currentParsedHunk != null && line.matches(DiffLine.Type.HUNK_LINE_FROM) -> {
-                    currentParsedHunk.from.lines.add(parseHunkline(line)!!)
+                    currentParsedHunk.from.lines.put(numLine, parseHunkline(line)!!)
+                    numLine++
                 }
 
                 currentParsedHunk != null && line.matches(DiffLine.Type.HUNK_LINE_TO) -> {
-                    currentParsedHunk.to.lines.add(parseHunkline(line)!!)
+                    currentParsedHunk.to.lines.put(numLine, parseHunkline(line)!!)
+                    numLine++
                 }
             }
         }

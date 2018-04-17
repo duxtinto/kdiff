@@ -96,12 +96,11 @@ class KDiffParserTest {
                 this.lines.apply {
                     assertThat(this)
                             .hasSize(5)
-                            .contains(
-                                    "public class Main {",
-                                    "   public static void main(String[] args) {",
-                                    "       // old line",
-                                    "   }",
-                                    "}")
+                            .containsEntry(1, "public class Main {")
+                            .containsEntry(2, "   public static void main(String[] args) {")
+                            .containsEntry(3, "       // old line")
+                            .containsEntry(6, "   }")
+                            .containsEntry(7, "}")
                 }
             }
 
@@ -111,13 +110,12 @@ class KDiffParserTest {
                 this.lines.apply {
                     assertThat(this)
                             .hasSize(6)
-                            .contains(
-                                    "public class Main {",
-                                    "   public static void main(String[] args) {",
-                                    "       // new line",
-                                    "       // another new line",
-                                    "   }",
-                                    "}")
+                            .containsEntry(1, "public class Main {")
+                            .containsEntry(2, "   public static void main(String[] args) {")
+                            .containsEntry(4, "       // new line")
+                            .containsEntry(5, "       // another new line")
+                            .containsEntry(6, "   }")
+                            .containsEntry(7, "}")
                 }
             }
         }
