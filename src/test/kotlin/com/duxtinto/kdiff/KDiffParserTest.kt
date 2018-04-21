@@ -1,6 +1,7 @@
 package com.duxtinto.kdiff
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
 class KDiffParserTest {
@@ -116,6 +117,87 @@ class KDiffParserTest {
                             .containsEntry(5, "       // another new line")
                             .containsEntry(6, "   }")
                             .containsEntry(7, "}")
+                }
+            }
+        }
+    }
+
+    @Test
+    @Tag("testing")
+    internal fun `parse a multi-hunk diff`() {
+        // Arrange
+        val sut = KDiffParser()
+        val rawDiff = """
+            diff --git a/Main.java b/Main.java
+            --- a/Main.java
+            +++ b/Main.java
+            @@ -3,3 +3,3 @@
+             public class Main {
+                public static void main(String[] args) {
+            -       // old line
+            +       // new line
+            @@ -50,3 +50,3 @@
+            -       // another old line
+            +       // another new line
+                }
+             }
+        """.trimIndent()
+
+        // Act
+        val diffs = sut.parse(rawDiff)
+
+        // Arrange
+        assertThat(diffs).hasSize(1)
+        val diff = diffs.first()
+        assertThat(diff.hunks).hasSize(2)
+        with(diff.hunks.first()) {
+            this.from.apply {
+                assertThat(this.start).isEqualTo(3)
+                assertThat(this.count).isEqualTo(3)
+                this.lines.apply {
+                    assertThat(this)
+                            .hasSize(3)
+                            .containsEntry(1, "public class Main {")
+                            .containsEntry(2, "   public static void main(String[] args) {")
+                            .containsEntry(3, "       // old line")
+                }
+            }
+
+            this.to.apply {
+                assertThat(this.start).isEqualTo(3)
+                assertThat(this.count).isEqualTo(3)
+                this.lines.apply {
+                    assertThat(this)
+                            .hasSize(3)
+                            .containsEntry(1, "public class Main {")
+                            .containsEntry(2, "   public static void main(String[] args) {")
+                            .containsEntry(4, "       // new line")
+                }
+            }
+        }
+
+        with(diff.hunks[1]) {
+            this.from.apply {
+                assertThat(this.start).isEqualTo(50)
+                assertThat(this.count).isEqualTo(3)
+                this.lines.apply {
+                    assertThat(this)
+                            .hasSize(3)
+                            .containsEntry(6, "       // another old line")
+                            .containsEntry(8, "   }")
+                            .containsEntry(9, "}")
+                }
+            }
+
+            this.to.apply {
+                assertThat(this.start).isEqualTo(50)
+                assertThat(this.count).isEqualTo(3)
+                this.lines.apply {
+                    assertThat(this)
+                            .hasSize(3)
+                            .containsEntry(7, "       // another new line")
+                            .containsEntry(8, "   }")
+                            .containsEntry(9, "}")
                 }
             }
         }
